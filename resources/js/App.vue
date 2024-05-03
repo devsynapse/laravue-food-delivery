@@ -1,7 +1,13 @@
+<script setup>
+    import MainLayout from './Layouts/MainLayout.vue'
+</script>
+
 <template>
-    <router-view v-slot="{ Component, route }">
-        <div :key="route.name">
-            <Component :is="Component" />
-        </div>
-    </router-view>
+    <MainLayout>
+        <router-view v-slot="{ Component, route }">
+            <div :key="route.name">
+                <Component :is="Component" />
+            </div>
+        </router-view>
+    </MainLayout>
 </template>

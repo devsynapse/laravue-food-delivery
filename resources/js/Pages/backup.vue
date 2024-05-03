@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, reactive  } from 'vue'
+import { ref } from 'vue'
 
 defineProps({
 
@@ -12,28 +12,28 @@ const products = [
         name: 'Cheeseburger',
         href: '/products/1',
         price: '$9',
-        imageSrc: '',
+        imageSrc: 'cheese-burger.jpg',
     },
     {
         id: 2,
         name: 'Chiken burger',
         href: '#',
         price: '$8.50',
-        imageSrc: '',
+        imageSrc: 'chicken-burger.jpg',
     },
     {
         id: 3,
         name: 'Fish burger',
         href: '#',
         price: '$10',
-        imageSrc: '',
+        imageSrc: 'fish-burger.jpg',
     },
     {
         id: 4,
         name: 'Double cheeseburger',
         href: '#',
-        price: '$35',
-        imageSrc: '',
+        price: '$15',
+        imageSrc: 'double-burger.jpg',
     },
     // More products...
 ]
@@ -62,7 +62,11 @@ const searchProducts = (e) => {
     showSearchDropdown.value = true;
 };
 
+const getImageUrl = (image_file) => {
+    let img_path = new URL(`../../images/${image_file}`, import.meta.url);
 
+    return img_path.href;
+};
 
 </script>
 
@@ -74,7 +78,7 @@ const searchProducts = (e) => {
             <nav>
                 <div class="flex flex-wrap items-center justify-between p-4">
                     <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                        <img src=""
+                        <img :src="getImageUrl('app-logo.jpg')"
                             class="h-8" alt="Flowbite Logo" />
                         <span class="self-center text-2xl font-semibold whitespace-nowrap">
                             LaraVue Food</span>
@@ -130,24 +134,20 @@ const searchProducts = (e) => {
 
             </div>
 
-            <div id="main-page-slide-wrapper">
-
-            </div>
-
             <div id="popular-products-list px-14">
                 <h2 class="text-center py-6 text-3xl font-extrabold">Popular products</h2>
                 <div class="grid grid-cols-4 gap-x-6 gap-y-10 px-48 ">
                     <a v-for="product in products" :key="product.id" :href="product.href" class="group ">
                         <div
                             class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7 max-h-52">
-                            <img :src="product.imageSrc"
+                            <img :src="getImageUrl(product.imageSrc)"
                                 class="h-full w-full object-center group-hover:opacity-75" />
                         </div>
                         <h3 class="mt-4 text-sm text-gray-700">{{ product.name }}</h3>
                         <p class="mt-1 text-lg font-medium text-gray-900">{{ product.price }}</p>
                         <button type="submit"
                             class="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            @click="cartAmount++">
+                            @click.stop.prevent="cartAmount++">
                             Quick order
                         </button>
                     </a>
@@ -155,9 +155,7 @@ const searchProducts = (e) => {
             </div>
         </main>
 
-        <footer class="border-t-2 border-grey-700 py-8 text-center text-sm">
-            Synapse's test project 2024
-        </footer>
+        
     </div>
 
 
