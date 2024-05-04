@@ -6,11 +6,6 @@
 
             return img_path.href
         };
-
-            // expose to template and other options API hooks
-            return {
-                getImageUrl
-            }
         },
     }
 </script>
