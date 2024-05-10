@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { getImageUrl } from './Helpers/Utilities'
+import { getImageUrl } from '../Helpers/Utilities'
 
 
 </script>
