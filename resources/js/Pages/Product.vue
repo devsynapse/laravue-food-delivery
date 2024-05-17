@@ -6,7 +6,7 @@ onMounted(async() => {
 })
 
 const getProductInfo = async () => {
-    let response = await axios.get('api/products/1');
+    let response = await axios.get('/api/products/1');
     console.log(response.data);
 }
 

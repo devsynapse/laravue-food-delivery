@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import AppHeader from '../Partials/AppHeader.vue'
-import AppFooter from '../Partials/AppFooter.vue'
+import AppHeader from '../Components/AppHeader.vue'
+import AppFooter from '../Components/AppFooter.vue'
 
 export default {
   name: 'MainLayout',
