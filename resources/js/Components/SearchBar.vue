@@ -4,7 +4,7 @@ import { ref } from 'vue'
 
 const showSearchDropdown = ref(false)
 const searchQuery = ref('')
-const searchResults = []
+const searchResults = ref([])
     
 const searchProducts = (e) => {
      if (searchQuery.value.length > 0) {
@@ -12,7 +12,6 @@ const searchProducts = (e) => {
             .then((response) => {
                 searchResults.value = response.data
                 showSearchDropdown.value = true
-                console.log(searchResults.length)
             })
             .catch((error) => {
                 showSearchDropdown.value = false   

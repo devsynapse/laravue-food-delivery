@@ -29,6 +29,8 @@ class ProductController extends Controller
 
     public function findProducts(string $searchString): JsonResponse
     {
-        
+        $products = Product::where('name', 'LIKE', '%'.$searchString.'%')->get();
+
+        return response()->json($products, 200);
     }
 }
