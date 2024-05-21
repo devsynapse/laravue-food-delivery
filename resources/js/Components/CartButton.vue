@@ -1,9 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-const cartAmount = ref(0);
-const addToOrder = () => {
-    cartAmount += 1;
-}
+import { useCartAmountStore } from '../Stores/cartAmountStore'
+
+const cartAmount = useCartAmountStore()
 
 </script>
 
@@ -19,7 +18,7 @@ const addToOrder = () => {
             Checkout
             <span
                 class="inline-flex items-center justify-center w-4 h-4 ms-2 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
-                {{ cartAmount }}
+                {{ cartAmount.count }}
             </span>
         </button>
 
