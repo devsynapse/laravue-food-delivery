@@ -1,29 +1,35 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue'
+import ProductItem from '../Components/ProductItem.vue'
+import AppBanner from '../Components/AppBanner.vue'
 
 let products = ref([]);
 
 onMounted(async() => {
-    getProductInfo();
+    getProductInfo()
 })
 
 const getProductInfo = async () => {
-    let response = await axios.get('api/products/1');
-    products.value = response.data;
+    await axios.get('/api/products')
+        .then(response => products.value = response.data)
+        .catch(error => console.log(error))
 }
 
 </script>
 
 <template>
-    <div id="page-root" class="min-h-screen flex flex-col justify-between">
-        <div id="popular-products-list px-14">
-            
-            <div class="grid grid-cols-4 gap-x-6 gap-y-10 px-48">
-                <div v-for="product in products" :key="product.id" class="group">
-                    <h3 class="mt-4 text-sm text-gray-700">{{ product.name }}</h3>              
+    <main class="min-h-96 flex-grow">
+        <AppBanner />
+        <div id="products-list" class="px-14">
+                <h2 class="text-center py-6 text-3xl font-extrabold">Our menu</h2>               
+                <div class="grid grid-cols-4 gap-x-6 gap-y-10 px-48 ">
+                    <ProductItem v-for="product in products"
+                        :id="product.id"
+                        :name="product.name"
+                        :img_url="product.img_url"
+                        :price="product.price"
+                    />
                 </div>
             </div>
-            
-        </div>
-    </div>
+    </main>
 </template>
