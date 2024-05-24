@@ -1,6 +1,5 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import AppBanner from '../Components/AppBanner.vue'
 import { useRoute } from 'vue-router';
 import { useCartAmountStore } from '../Stores/cartAmountStore'
 import { getImageUrl } from '../Helpers/Utilities'
@@ -29,8 +28,6 @@ const getProductInfo = async () => {
 
 <template>
     <div class="flex flex-col">
-        <AppBanner />
-
         <div class="flex-col md:flex-row justify-center flex gap-4 items-start mx-4 py-12">
             <div class="flex bg-white rounded-lg shadow dark:bg-gray-800 flex-col md:flex-row">
                 <div class="relative w-full md:w-48 flex justify-center items-center">

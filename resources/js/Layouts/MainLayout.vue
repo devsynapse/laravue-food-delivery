@@ -1,7 +1,11 @@
 <template>
-    <AppHeader />
-    <slot />
-    <AppFooter />
+    <main class="flex flex-col min-h-screen bg-gray-100 ">
+      <AppHeader />
+      <div class="flex flex-col grow container p-4 mx-auto">
+          <slot />
+      </div>
+      <AppFooter />
+    </main>
 </template>
 
 <script>
