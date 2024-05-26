@@ -18,8 +18,6 @@ const getProductInfo = async () => {
     await axios.get(`/api/products/${productId}`)
         .then((response) => {
             productInfo.value = response.data
-            console.log(response.data)
-            console.log(productInfo)
         })
         .catch(error => console.log(error))
 }
@@ -27,28 +25,51 @@ const getProductInfo = async () => {
 </script>
 
 <template>
-    <div class="flex flex-col">
-        <div class="flex-col md:flex-row justify-center flex gap-4 items-start mx-4 py-12">
-            <div class="flex bg-white rounded-lg shadow dark:bg-gray-800 flex-col md:flex-row">
-                <div class="relative w-full md:w-48 flex justify-center items-center">
-                    <img :src="getImageUrl(productInfo.img_url)" alt="shopping image"
-                        class="object-cover w-full h-48 md:h-full rounded-t-lg md:rounded-l-lg md:rounded-t-none">
+    <div id="products-page">
+        <div class="flex xl:flex-row flex-col rounded bg-white p-4">
+            <div id="product-image" class="lg:w-4/12 md:w-5/12 w-full px-[15px]">
+                <div class="detail-media rounded-[10px] overflow-hidden w-full mb-[30px]">
+                    <img :src="getImageUrl(productInfo.img_url)" class="h-full w-full object-cover">
                 </div>
-                <form class="flex-auto p-6">
-                    <div class="flex flex-wrap">
-                        <h1 class="flex-auto text-xl font-semibold dark:text-gray-50">{{ productInfo.name }}</h1>
-                        <div class="text-xl font-semibold text-gray-500 dark:text-gray-300">{{productInfo.price}}$</div>
-                    </div>
-                
-                    <div class="flex mb-4 text-sm font-medium">
-                        <button type="button"
-                            class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
-                            @click="cartAmount.addToOrder()">
-                            Add to order
-                        </button>
-                    </div>
-                </form>
+            </div>    
+            <div id="product-info" class="lg:w-8/12 md:w-7/12 w-full px-[15px]">
+                <div class="relative">
+                    <form>
+                        <div class="flex flex-col flex-wrap mb-4">
+                            <h1 class="mb-2 lg:text-4xl sm:text-[2rem] text-[1.75rem] font-semibold">{{ productInfo.name }}</h1>
+                            <p class="text-[15px] mt-5 mb-4">{{ productInfo.description }}</p>   
+                        </div>
+                        <div class="flex flex-col flex-wrap mb-4">
+                            <p>Add-ons</p>
+                            <div class="flex items-center mb-2">
+                                <input id="default-checkbox" type="checkbox" name="addons[]" value="cheese" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Additional cheese (+1$)</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input id="default-checkbox" type="checkbox" name="addons[]" value="tomato" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Additional tomato (+0.50$)</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input id="default-checkbox" type="checkbox" name="addons[]" value="pickle" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Additional pickle (+0.25$)</label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col xl:flex-row mb-4 text-sm font-medium gap-8">
+                            <div class="flex flex-col">
+                                <p>Price</p>
+                                <div class="text-xl font-semibold text-gray-500 dark:text-gray-300">{{ productInfo.price }}$</div>
+                            </div> 
+                            <button type="button"
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                                @click="cartAmount.addToOrder()">
+                                Add to order
+                            </button>
+                        </div>
+                    </form>
+                </div>        
             </div>
-        </div>   
-    </div>    
+        </div>
+        
+    </div>
 </template>

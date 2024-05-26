@@ -34,7 +34,7 @@ const searchProducts = (e) => {
                             stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                     </svg>
                 </div>
-                <input v-on:keyup="searchProducts" v-model="searchQuery" type="search" id="default-search"
+                <input autocomplete="off" v-on:keyup="searchProducts" v-model="searchQuery" type="search" id="default-search"
                     class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Search products" required />
                     
@@ -42,7 +42,7 @@ const searchProducts = (e) => {
             <div v-if="showSearchDropdown" id="dropdown" class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-full max-w-2xl absolute">
                 <ul v-if="searchResults.length > 0" class="py-2 text-sm text-gray-700">
                     <li v-for="searchResult in searchResults">
-                        <a href='/products/' class="inline-flex w-full px-4 py-2 hover:bg-gray-100">{{ searchResult.name }}</a>
+                        <a :href="'/products/'+searchResult.id" class="inline-flex w-full px-4 py-2 hover:bg-gray-100">{{ searchResult.name }}</a>
                     </li>    
                 </ul>
                 <p v-else class="p-4">Nothing found</p>

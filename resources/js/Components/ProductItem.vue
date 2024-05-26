@@ -17,7 +17,7 @@ defineProps([
 </script>
 
 <template>
-  <div class="rounded bg-white p-3  transition-all duration-200 hover:-translate-y-0.5 hover:shadow-downfall-lg">
+  <div class="rounded bg-white p-3  transition-all duration-200 hover:-translate-y-0.5 hover:shadow-downfall-lg shadow-sm">
       <a :key="id" :href="'/products/'+id" class="group">
           <div
               class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7 max-h-52">

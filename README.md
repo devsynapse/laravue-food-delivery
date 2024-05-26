@@ -1,1 +1,1 @@
-<h1>A small food delivery app built with Laravel and Vue.js</h1>
+<h1>A small food delivery app built with Laravel, Vue.js and Tailwind CSS</h1>
