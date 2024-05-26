@@ -24,7 +24,7 @@ const searchProducts = (e) => {
 </script>
 
 <template>    
-    <div id="search-form" class="w-full max-w-2xl mx-auto">
+    <div id="search-form" class="w-full xl:w-auto xl:grow mx-auto">
         <form>
             <div class="relative">
                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
