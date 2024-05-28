@@ -1,5 +1,18 @@
 <script setup>
+import { onMounted, ref } from 'vue'
+import { getImageUrl } from '../Helpers/Utilities'
 
+let cartProducts = ref([]);
+
+onMounted(async() => {
+    getCartProducts()
+})
+
+const getCartProducts = async () => {
+    await axios.get('/api/cart')
+        .then(response => cartProducts.value = response.data)
+        .catch(error => console.log(error))
+}
 </script>
 
 <template>
@@ -50,13 +63,14 @@
                         </div>
                 </div>
                 <div id="order-items" class="bg-white rounded p-4 w-full xl:w-1/2">
-                    <div class="order-item flex items-center border-b border-[#2222221a] pb-[15px] mb-[15px]">
+
+                    <div v-for="product in cartProducts" class="order-item flex items-center border-b border-[#2222221a] pb-[15px] mb-[15px]">
                         <div class="overflow-hidden rounded relative w-3/12">
-                            <img src="http://localhost:5173/resources/images/cheese-burger.jpg" class="h-full w-full object-cover">
+                            <img :src="getImageUrl(product.img_url)" class="h-full w-full object-cover">
                         </div>
                         <div class="ml-[15px] w-3/12">
                             <div class="mb-[10px] flex flex-col items-start">
-                                <p class="font-bold">Cheese burger</p>
+                                <p class="font-bold">{{ product.name }}</p>
                                 <div>
                                     <p>Add-ons: <span>Tomato, chesee, pickles</span></p>
                                 </div>
@@ -70,7 +84,7 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                                     </svg>
                                 </button>
-                                <input type="text" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5" placeholder="1" required />
+                                <input type="text" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5" :value="product.qty" required />
                                 <button type="button" id="increment-button" data-input-counter-increment="quantity-input" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-2 h-11 focus:ring-gray-100 focus:ring-2 focus:outline-none">
                                     <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
@@ -84,7 +98,6 @@
                                 </svg>
                             </button>
                         </div>
-                        
                     </div>
                     
                 </div>               

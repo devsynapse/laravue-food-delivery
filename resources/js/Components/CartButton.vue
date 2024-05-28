@@ -1,8 +1,22 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useCartAmountStore } from '../Stores/cartAmountStore'
 
-const cartAmount = useCartAmountStore()
+const cartAmount = ref(0)
+
+onMounted(async() => {
+    updateCartAmount()
+})
+
+const updateCartAmount = async () => {
+    await axios.get('/api/cart/amount')
+        .then((response) => {
+            cartAmount.value = response.data
+        })
+        .catch(error => console.log(error))
+}
+
+defineExpose({ updateCartAmount })
 
 </script>
 
@@ -15,10 +29,10 @@ const cartAmount = useCartAmountStore()
                 <path
                     d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z" />
             </svg>
-            My Order
+            Cart
             <span
                 class="inline-flex items-center justify-center w-4 h-4 ms-2 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
-                {{ cartAmount.count }}
+                {{ cartAmount }}
             </span>
         </a>
 
