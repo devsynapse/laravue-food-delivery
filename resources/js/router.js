@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeRoute from './Pages/Home.vue';
 import ProductsRoute from './Pages/Products.vue';
 import ProductRoute from './Pages/Product.vue';
-import OrderRoute from './Pages/Order.vue';
+import CartRoute from './Pages/Cart.vue';
 import AdminRoute from './Pages/Admin.vue';
 import NotFoundRoute from './Pages/NotFound.vue';
 
@@ -20,8 +20,8 @@ const routes = [
         component: ProductRoute,
     },
     {
-        path: '/order',
-        component: OrderRoute,
+        path: '/cart',
+        component: CartRoute,
     },
     {
         path: '/admin',
