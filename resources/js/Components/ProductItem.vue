@@ -1,10 +1,9 @@
 <script setup>
 
 import { getImageUrl } from '../Helpers/Utilities'
-import { useCartAmountStore } from '../Stores/cartAmountStore'
-import { addToCart } from '../Helpers/Cart'
+import { useCartStore } from '../Stores/cartStore'
 
-const cartAmount = useCartAmountStore()
+const cartStore = useCartStore()
 
 defineProps([
     'id',
@@ -31,7 +30,7 @@ defineProps([
             <p class="mt-1 text-lg font-medium text-gray-900">${{ price }}</p>  
             <button type="submit"
                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                @click.stop.prevent="addToCart(id)">
+                @click.stop.prevent="cartStore.addToCart(id)">
                 Add to cart
             </button>
         </div>

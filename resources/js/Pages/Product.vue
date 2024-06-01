@@ -1,8 +1,10 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { getImageUrl } from '../Helpers/Utilities'
-import { addToCart } from '../Helpers/Cart'
+import { useCartStore } from '../Stores/cartStore'
+
+const cartStore = useCartStore()
 
 const route = useRoute();
 const productId = route.params.id
@@ -60,7 +62,7 @@ const getProductInfo = async () => {
                             </div> 
                             <button type="button"
                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                                @click="addToCart(productInfo.id)">
+                                @click="cartStore.addToCart(productInfo.id)">
                                 Add to cart
                             </button>
                         </div>

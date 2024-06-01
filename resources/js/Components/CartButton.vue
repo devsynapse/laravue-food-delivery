@@ -1,8 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useCartAmountStore } from '../Stores/cartAmountStore'
+import { useCartStore } from '../Stores/cartStore'
 
 const cartAmount = ref(0)
+const cartStore = useCartStore()
 
 onMounted(async() => {
     updateCartAmount()
@@ -32,7 +33,7 @@ defineExpose({ updateCartAmount })
             Cart
             <span
                 class="inline-flex items-center justify-center w-4 h-4 ms-2 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
-                {{ cartAmount }}
+                {{ cartStore.count }}
             </span>
         </a>
 
