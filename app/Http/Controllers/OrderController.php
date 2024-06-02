@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
-use App\Models\Product;
+use Illuminate\Http\Request;
+use App\Http\Requests\StoreOrderRequest;
+use App\Models\Order;
 
 class OrderController extends Controller
 {
-    public function addToOrder($productId)
+    public function index(Request $request)
     {
-        $product = Product::find($productId);
+        $orders = Order::all();
 
-        return response()->json($products, 200);
-
+        return response()->json($orders, 200);
     }
 
-    public function getOrderAmount()
+    public function store(StoreOrderRequest $request)
     {
+        $post = Order::create($request->validated());
 
+        return $post->id;
     }
 
 }

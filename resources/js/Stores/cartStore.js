@@ -20,12 +20,15 @@ export const useCartStore = defineStore('cart', {
             
             this.products[product_id] = 1   
         },
-        removeFromCart(product_id) {
+        reduceInCart(product_id) {
             if (this.products[product_id] && this.products[product_id] > 1) {
                 this.products[product_id]--
                 return
             }
 
+            delete this.products[product_id]
+        },
+        removeProducFromCart(product_id) {
             delete this.products[product_id]
         },
     },
