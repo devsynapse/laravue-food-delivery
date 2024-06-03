@@ -1,19 +1,50 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref,  computed} from 'vue'
 import { getImageUrl } from '../Helpers/Utilities'
 import { useCartStore } from '../Stores/cartStore'
 
 const cartStore = useCartStore()
 
-let cartProducts = ref([]);
+const cartProducts = ref({})
+const cartAmountProducts = computed(() => {
+
+    let result = 0
+    
+    
+    return result
+})
 
 onMounted(async() => {
     getCartProducts()
 })
 
+const cartAddProduct = (product_id) => {
+    const qty = cartStore.addToCart(product_id)   
+    cartUpdateProduct(product_id, qty)
+}
+
+const cartReduceProduct = (product_id) => {
+    const qty = cartStore.reduceInCart(product_id)
+    cartUpdateProduct(product_id, qty)
+}
+
+const cartRemoveProduct = (product_id) => {
+    const qty = cartStore.reduceInCart(product_id)
+    cartUpdateProduct(product_id, qty)
+}
+
+const cartUpdateProduct = (product_id, qty) => {
+    if (qty < 1) {
+        delete cartProducts.value[product_id]
+        return
+    }
+
+    cartProducts.value[product_id]['qty'] = qty
+    return
+}
+
 const getCartProducts = async () => {
     const productIds = Object.keys(cartStore.products)
-    console.log(productIds)
 
     await axios.get('/api/cart', 
         {
@@ -22,21 +53,16 @@ const getCartProducts = async () => {
             }
         })        
         .then((response) => {
-            console.log(response.data)
-
-            const productsData = []
-
             response.data.forEach(element => {
-                productsData.push({
+                cartProducts.value[element.id] = {
                     'id': element.id,
                     'name': element.name,
                     'qty' : cartStore.products[element.id] ?? 0,
                     'img_url': element.img_url,
                     'price': element.price,
-                })
+                }
             });
 
-            cartProducts.value = productsData
         })
         .catch(error => console.log(error))
 }
@@ -47,12 +73,13 @@ const form = ref({
     address: '',
     unit: '',
     comment: '',
+    products: cartProducts,
 })
 
 const submit = () => {
     axios.post('/api/order', form.value)
         .then((response) => {
-            console.log(response.data)
+            //console.log(response.data)
   
         })
         .catch(error => console.log(error))
@@ -86,19 +113,19 @@ const submit = () => {
                             
                             <div class="flex flex-row justify-end">
                                 <div class="relative flex items-center max-w-[8rem]">
-                                    <button @click="cartStore.reduceInCart(product.id)" type="button" id="decrement-button" data-input-counter-decrement="quantity-input" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-2 h-11 focus:ring-gray-100 focus:ring-2 focus:outline-none">
+                                    <button @click="cartReduceProduct(product.id)" type="button" id="decrement-button" data-input-counter-decrement="quantity-input" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-2 h-11 focus:ring-gray-100 focus:ring-2 focus:outline-none">
                                         <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                                         </svg>
                                     </button>
                                     <input type="text" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5" :value="product.qty" required />
-                                    <button @click="cartStore.addToCart(product.id)" type="button" id="increment-button" data-input-counter-increment="quantity-input" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-2 h-11 focus:ring-gray-100 focus:ring-2 focus:outline-none">
+                                    <button @click="cartAddProduct(product.id)" type="button" id="increment-button" data-input-counter-increment="quantity-input" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-2 h-11 focus:ring-gray-100 focus:ring-2 focus:outline-none">
                                         <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
                                         </svg>
                                     </button>
                                 </div>
-                                <button @click="cartStore.removeProducFromCart(product.id)" class="xl:ms-8 ms-2 p-4">
+                                <button @click="cartRemoveProduct(product.id)" class="xl:ms-8 ms-2 p-4">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-trash" viewBox="0 0 16 16">
                                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                                         <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
@@ -111,7 +138,7 @@ const submit = () => {
                 </div>
                 <div id="order-info" class="w-full xl:w-1/2">
                     <div class="flex flex-wrap flex-col rounded bg-white mb-6 p-4">
-                        <p class="font-bold">Products: $100</p>
+                        <p class="font-bold">Products: ${{ cartAmountProducts }}</p>
                         <p class="font-bold">Delivery: $0</p>
                         <p class="font-bold">Total: $100</p>
                     </div>

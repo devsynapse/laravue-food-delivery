@@ -15,21 +15,25 @@ export const useCartStore = defineStore('cart', {
         addToCart(product_id) {
             if (this.products[product_id]) {
                 this.products[product_id]++
-                return
+                return this.products[product_id]
             }
             
-            this.products[product_id] = 1   
+            this.products[product_id] = 1
+            return 1
         },
         reduceInCart(product_id) {
             if (this.products[product_id] && this.products[product_id] > 1) {
                 this.products[product_id]--
-                return
+                return this.products[product_id]
             }
 
             delete this.products[product_id]
+            return 0
         },
+
         removeProducFromCart(product_id) {
             delete this.products[product_id]
+            return 0
         },
     },
 })

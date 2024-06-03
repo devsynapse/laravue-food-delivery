@@ -15,8 +15,10 @@ class OrderController extends Controller
         return response()->json($orders, 200);
     }
 
-    public function store(StoreOrderRequest $request)
+    public function store(Request $request)
     {
+        return response()->json($request->all(), 200);
+
         $post = Order::create($request->validated());
 
         return $post->id;

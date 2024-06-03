@@ -18,7 +18,7 @@ class StoreOrderRequest extends FormRequest
             'last_name' => ['required', 'string', 'max:32'],
             'address' => ['required', 'string', 'max:64'],
             'unit' => ['required', 'string', 'max:8'],
-            'comment' => ['required', 'string', 'max:256'],
+            'comment' => ['string', 'max:256'],
         ];
     }
 }
