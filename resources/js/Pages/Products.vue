@@ -1,18 +1,13 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import ProductItem from '../Components/ProductItem.vue'
+import useProducts from '../Composables/Products'
 
-let products = ref([]);
+const { products, getProducts } = useProducts()
 
-onMounted(async() => {
-    getProductInfo()
+onMounted(() => {
+    getProducts()
 })
-
-const getProductInfo = async () => {
-    await axios.get('/api/products')
-        .then(response => products.value = response.data)
-        .catch(error => console.log(error))
-}
 
 </script>
 

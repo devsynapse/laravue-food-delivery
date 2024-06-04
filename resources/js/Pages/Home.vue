@@ -1,18 +1,14 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import ProductItem from '../Components/ProductItem.vue'
+import useProducts from '../Composables/Products'
 
-const popularProducts = ref([])
+const { popularProducts, getPopularProducts } = useProducts()
 
-onMounted(async() => {
-    fetchPopularProducts();
+onMounted(() => {
+    getPopularProducts()
 })
 
-const fetchPopularProducts = async () => {
-    await axios.get('/api/popular-products')
-        .then(response => popularProducts.value = response.data)
-        .catch(error => console.log(error))
-}
 </script>
 
 <template>

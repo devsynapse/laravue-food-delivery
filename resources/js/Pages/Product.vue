@@ -4,23 +4,18 @@ import { useRoute } from 'vue-router'
 import { getImageUrl } from '../Helpers/Utilities'
 import { useCartStore } from '../Stores/cartStore'
 
-const cartStore = useCartStore()
+import useProducts from '../Composables/Products'
+
+const { product, getProduct } = useProducts()
 
 const route = useRoute();
 const productId = route.params.id
-const productInfo = ref({})
 
-onMounted(async() => {
-    getProductInfo()
+onMounted(() => {
+    getProduct(productId)
 })
 
-const getProductInfo = async () => {
-    await axios.get(`/api/products/${productId}`)
-        .then((response) => {
-            productInfo.value = response.data
-        })
-        .catch(error => console.log(error))
-}
+const cartStore = useCartStore()
 
 </script>
 
@@ -29,15 +24,15 @@ const getProductInfo = async () => {
         <div class="flex xl:flex-row flex-col rounded bg-white p-4">
             <div id="product-image" class="lg:w-4/12 md:w-5/12 w-full px-[15px]">
                 <div class="detail-media rounded-[10px] overflow-hidden w-full mb-[30px]">
-                    <img :src="getImageUrl(productInfo.img_url)" class="h-full w-full object-cover">
+                    <img :src="getImageUrl(product.img_url)" class="h-full w-full object-cover">
                 </div>
             </div>    
             <div id="product-info" class="lg:w-8/12 md:w-7/12 w-full px-[15px]">
                 <div class="relative">
                     <form>
                         <div class="flex flex-col flex-wrap mb-4">
-                            <h1 class="mb-2 lg:text-4xl sm:text-[2rem] text-[1.75rem] font-semibold">{{ productInfo.name }}</h1>
-                            <p class="text-[15px] mt-5 mb-4">{{ productInfo.description }}</p>   
+                            <h1 class="mb-2 lg:text-4xl sm:text-[2rem] text-[1.75rem] font-semibold">{{ product.name }}</h1>
+                            <p class="text-[15px] mt-5 mb-4">{{ product.description }}</p>   
                         </div>
                         <div class="flex flex-col flex-wrap mb-4">
                             <p>Add-ons</p>
@@ -58,11 +53,11 @@ const getProductInfo = async () => {
                         <div class="flex flex-col xl:flex-row mb-4 text-sm font-medium gap-8">
                             <div class="flex flex-col">
                                 <p>Price</p>
-                                <div class="text-xl font-semibold text-gray-500 dark:text-gray-300">{{ productInfo.price }}$</div>
+                                <div class="text-xl font-semibold text-gray-500 dark:text-gray-300">{{ product.price }}$</div>
                             </div> 
                             <button type="button"
                                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                                @click="cartStore.addToCart(productInfo.id)">
+                                @click="cartStore.addToCart(product.id)">
                                 Add to cart
                             </button>
                         </div>
