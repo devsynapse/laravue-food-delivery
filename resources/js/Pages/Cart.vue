@@ -4,7 +4,7 @@ import { getImageUrl } from '@/Helpers/Utilities'
 import { useCartStore } from '@/Stores/cartStore'
 
 const cartStore = useCartStore()
-
+const errors = ref({})
 const cartProducts = ref([])
 const cartProductsPrice = ref(0)
 
@@ -77,21 +77,27 @@ const updateCartTotal = () => {
 }
 
 const form = ref({
-    first_name: 'test',
-    last_name: 'test',
-    address: 'test',
-    unit: 'test',
-    comment: 'test',
+    first_name: '',
+    last_name: '',
+    address: '',
+    unit: '',
+    comment: '',
     products: cartProducts,
 })
 
 const submit = () => {
     axios.post('/api/order', form.value)
-        .then((response) => {
-            //console.log(response.data)
-  
+        .then((response) => {      
+            if (response.status === 200) {
+                errors.value = {}
+                alert('order saved')
+            }
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            if (error.response.status === 422) {
+                errors.value = error.response.data.errors
+            }
+        })
 }
 
 </script>
@@ -100,8 +106,7 @@ const submit = () => {
     <div id="my-order">
         <h2 class="text-center py-6 text-3xl font-extrabold">My order</h2>
         <form @submit.prevent="submit">
-            <div id="order-info" class="flex flex-col xl:flex-row gap-6">          
-                
+            <div id="order-info" class="flex flex-col xl:flex-row gap-6">                        
                 <div id="order-items" class="bg-white rounded p-4 w-full xl:w-1/2">
 
                     <div v-for="product in cartProducts" class="order-item flex items-center border-b border-[#2222221a] pb-[15px] mb-[15px]">
@@ -157,14 +162,15 @@ const submit = () => {
                                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
                                     First Name
                                 </label>
-                                <input v-model="form.first_name" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="First Name">
-                                <p class="text-red-500 text-xs italic">Please fill out this field.</p>
+                                <input v-model="form.first_name" class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="First Name">
+                                <p class="text-red-500 text-xs italic" v-if="errors?.first_name">{{ errors.first_name[0] }}</p>
                             </div>
                             <div class="w-full md:w-1/2 px-3">
                                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
                                     Last Name
                                 </label>
                                 <input v-model="form.last_name" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text" placeholder="Last Name">
+                                <p class="text-red-500 text-xs italic" v-if="errors?.last_name">{{ errors.last_name[0] }}</p>
                             </div>
                         </div>
                         <div class="flex flex-wrap mb-6">
@@ -173,12 +179,14 @@ const submit = () => {
                                     Street address
                                 </label>
                                 <input v-model="form.address" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-street" type="text" placeholder="Street address">
+                                <p class="text-red-500 text-xs italic" v-if="errors?.address">{{ errors.address[0] }}</p>
                             </div>
                             <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
                                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-unit">
                                     Unit #
                                 </label>
                                 <input v-model="form.unit" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-unit" type="text" placeholder="Unit">
+                                <p class="text-red-500 text-xs italic" v-if="errors?.unit">{{ errors.unit[0] }}</p>
                             </div>
                         </div>
                         <div class="flex flex-wrap flex-wrap mb-6">
@@ -186,9 +194,8 @@ const submit = () => {
                                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-comment">
                                     Comment to order
                                 </label>
-                                <textarea v-model="form.comment" id="comment" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Add comment for to your order...">
-
-                                </textarea>
+                                <textarea v-model="form.comment" id="comment" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Add comment for to your order..."></textarea>
+                                <p class="text-red-500 text-xs italic" v-if="errors?.comment">{{ errors.comment[0] }}</p>
                             </div>
                         </div>
                         <div class="flex flex-wrap justify-center">
