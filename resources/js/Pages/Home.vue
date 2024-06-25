@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from 'vue'
-import ProductItem from '../Components/ProductItem.vue'
-import useProducts from '../Composables/Products'
+import ProductItem from '@/Components/ProductItem.vue'
+import useProducts from '@/Composables/Products'
 
 const { popularProducts, getPopularProducts } = useProducts()
 

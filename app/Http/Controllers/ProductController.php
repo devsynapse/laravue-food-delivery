@@ -2,35 +2,31 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Models\Product;
+use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(): AnonymousResourceCollection
     {
-        $products = Product::take(20)->get();
-
-        return response()->json($products, 200);
+        return ProductResource::collection(Product::take(20)->get());
     }
 
-    public function getProduct(int $productId): JsonResponse
+    public function getProduct(int $productId): ProductResource
     {
-        $product = Product::find($productId);
-
-        return response()->json($product, 200);
+        return new ProductResource(Product::findOrFail($productId));
     }
 
-    public function getPopularProducts(): JsonResponse
+    public function getPopularProducts(): AnonymousResourceCollection
     {
-        $products = Product::take(4)->get();
-
-        return response()->json($products, 200);
+        return ProductResource::collection(Product::take(4)->get());
     }
 
-    public function findProducts(string $searchString): JsonResponse
+    public function findProducts(string $searchString): AnonymousResourceCollection
     {
         $products = Product::where('name', 'LIKE', '%'.$searchString.'%')->get();
 
-        return response()->json($products, 200);
+        return ProductResource::collection($products);
     }
 }

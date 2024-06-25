@@ -1,8 +1,8 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getImageUrl } from '../Helpers/Utilities'
-import { useCartStore } from '../Stores/cartStore'
+import { getImageUrl } from '@/Helpers/Utilities'
+import { useCartStore } from '@/Stores/cartStore'
 
 import useProducts from '../Composables/Products'
 

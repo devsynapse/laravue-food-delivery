@@ -8,7 +8,7 @@ export default function useProducts() {
     const getProduct = async (productId) => { 
         axios.get(`/api/products/${productId}`)            
             .then(response => {
-                product.value = response.data;
+                product.value = response.data.data;
             })
             .catch(error => console.log(error))
     }
@@ -16,7 +16,7 @@ export default function useProducts() {
     const getProducts = async () => { 
         axios.get('/api/products')            
             .then(response => {
-                products.value = response.data;
+                products.value = response.data.data;
             })
             .catch(error => console.log(error))
     }
@@ -24,7 +24,7 @@ export default function useProducts() {
     const getPopularProducts = async () => { 
         axios.get('/api/popular-products')            
             .then(response => {
-                popularProducts.value = response.data;
+                popularProducts.value = response.data.data;
             })
             .catch(error => console.log(error))
     }
