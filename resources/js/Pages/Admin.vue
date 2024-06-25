@@ -9,7 +9,7 @@ onMounted(async() => {
 
 const fetchOrders = async () => {
     await axios.get('/api/orders')
-        .then(response => orders.value = response.data)
+        .then(response => orders.value = response.data.data)
         .catch(error => console.log(error))
 }
 </script>

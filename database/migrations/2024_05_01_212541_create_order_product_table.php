@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('order_product', function (Blueprint $table) {
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('product_id');
+            $table->integer('qty');
+            $table->float('price', 2);
+            $table->float('total', 2);
             $table->timestamps();
             
             $table->primary(['order_id', 'product_id']);

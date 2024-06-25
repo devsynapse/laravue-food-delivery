@@ -77,11 +77,11 @@ const updateCartTotal = () => {
 }
 
 const form = ref({
-    first_name: '',
-    last_name: '',
-    address: '',
-    unit: '',
-    comment: '',
+    first_name: 'test',
+    last_name: 'test',
+    address: 'test',
+    unit: 'test',
+    comment: 'test',
     products: cartProducts,
 })
 

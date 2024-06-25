@@ -19,6 +19,7 @@ class StoreOrderRequest extends FormRequest
             'address' => ['required', 'string', 'max:64'],
             'unit' => ['required', 'string', 'max:8'],
             'comment' => ['string', 'max:256'],
+            'products' => ['required', 'array'],
         ];
     }
 }
