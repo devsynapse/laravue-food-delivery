@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('address', 64);
             $table->string('unit', 8);
             $table->string('comment', 256)->default('');
+            $table->integer('status');
             $table->timestamps();
         });
     }

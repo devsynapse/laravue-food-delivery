@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    protected $fillable = ['first_name', 'last_name', 'address', 'unit', 'comment'];
+    protected $fillable = ['first_name', 'last_name', 'address', 'unit', 'comment', 'status'];
 
     /**
      * Get all of the products for the Order.

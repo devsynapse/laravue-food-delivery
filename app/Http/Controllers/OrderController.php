@@ -7,6 +7,7 @@ use App\Http\Requests\StoreOrderRequest;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Models\Order;
 use App\Http\Resources\OrderResource;
+use App\Enums\OrderStatus;
 
 class OrderController extends Controller
 {
@@ -17,7 +18,10 @@ class OrderController extends Controller
 
     public function store(StoreOrderRequest $request)
     {
-        $order = Order::create($request->validated());
+        $orderData = $request->validated();
+        $orderData['status'] = OrderStatus::NEW->value;
+
+        $order = Order::create($orderData);
         
         $orderProducts = [];
 
