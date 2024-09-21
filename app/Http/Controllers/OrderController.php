@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Models\Order;
 use App\Http\Resources\OrderResource;
@@ -39,6 +40,11 @@ class OrderController extends Controller
         $order->products()->attach($orderProducts);
 
         return $order->id;
+    }
+
+    public function update(UpdateOrderRequest $request, int $orderId)
+    {
+
     }
 
 }
