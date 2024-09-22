@@ -44,7 +44,11 @@ class OrderController extends Controller
 
     public function update(UpdateOrderRequest $request, int $orderId)
     {
+        $order = Order::find($orderId);
+        $order->status = $request->safe()->only(['status']);
+        $order->save();
 
+        return $order->id;
     }
 
 }
