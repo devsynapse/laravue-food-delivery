@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue'
 const orders = ref([])
 
 onMounted(async() => {
-    fetchOrders();
+    fetchOrder();
 })
 
 const fetchOrders = async () => {

@@ -4,6 +4,7 @@ import ProductsRoute from './Pages/Products.vue';
 import ProductRoute from './Pages/Product.vue';
 import CartRoute from './Pages/Cart.vue';
 import AdminRoute from './Pages/Admin.vue';
+import OrderRoute from './Pages/Order.vue';
 import NotFoundRoute from './Pages/NotFound.vue';
 
 const routes = [
@@ -26,6 +27,10 @@ const routes = [
     {
         path: '/admin',
         component: AdminRoute,
+    },
+    {
+        path: '/order/:id',
+        component: OrderRoute,
     },
     {
         path: '/:pathMatch(.*)*',
