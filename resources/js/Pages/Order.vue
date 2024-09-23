@@ -1,17 +1,19 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-const orders = ref([])
+const order = ref([])
 
 onMounted(async() => {
-    fetchOrder();
+    getOrder();
 })
 
-const fetchOrders = async () => {
-    await axios.get('/api/orders')
-        .then(response => orders.value = response.data.data)
-        .catch(error => console.log(error))
-}
+const getOrder = async (orderId) => { 
+        axios.get(`/api/order/${orderId}`)            
+            .then(response => {
+                order.value = response.data.data;
+            })
+            .catch(error => console.log(error))
+    }
 </script>
 
 <template>

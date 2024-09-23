@@ -20,7 +20,11 @@ const fetchOrders = async () => {
         <div id="orders-list" class="flex flex-col gap-2">
             <div v-for="order in orders" class="bg-white rounded p-4 w-full">
                 <p>Order Id: {{ order.id }} First name: {{ order.first_name }} Last name: {{ order.last_name }} Comment: {{ order.comment }} Status: {{ order.status }}</p>
-                <div>Order details</div>
+                <div>
+                    <p>Order details</p>
+                    <div>Order products</div>
+                </div>
+                
             </div>
         </div>
     </div>
