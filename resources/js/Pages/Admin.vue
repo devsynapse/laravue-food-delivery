@@ -1,17 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import useOrders from '@/Composables/Orders'
 
-const orders = ref([])
+const { orders, getOrders } = useOrders()
 
 onMounted(async() => {
-    fetchOrders();
+    getOrders();
 })
 
-const fetchOrders = async () => {
-    await axios.get('/api/orders')
-        .then(response => orders.value = response.data.data)
-        .catch(error => console.log(error))
-}
 </script>
 
 <template>
@@ -22,7 +18,8 @@ const fetchOrders = async () => {
                 <p>Order Id: {{ order.id }} First name: {{ order.first_name }} Last name: {{ order.last_name }} Comment: {{ order.comment }} Status: {{ order.status }}</p>
                 <div>
                     <p>Order details</p>
-                    <div>Order products</div>
+                    <p>Order products</p>
+
                 </div>
                 
             </div>
