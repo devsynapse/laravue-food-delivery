@@ -12,4 +12,5 @@ Route::get("/popular-products", [ProductController::class, 'getPopularProducts']
 Route::get("/find-products/{searchString}", [ProductController::class, 'findProducts']);
 Route::get("/cart", [CartController::class, 'getCartProducts']);
 Route::get("/orders", [OrderController::class, 'index']);
+Route::get("/orders/{order_id}", [OrderController::class, 'getOrder']);
 Route::post("/order", [OrderController::class, 'store']);
