@@ -17,6 +17,11 @@ class OrderController extends Controller
         return OrderResource::collection(Order::all());
     }
 
+    public function getOrder(int $orderId): OrderResource
+    {
+        return new OrderResource(Order::findOrFail($orderId));
+    }
+
     public function store(StoreOrderRequest $request)
     {
         $orderData = $request->validated();
