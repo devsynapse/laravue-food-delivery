@@ -7,13 +7,21 @@ onMounted(async() => {
     getOrder();
 })
 
-const getOrder = async (orderId) => { 
-        axios.get(`/api/order/${orderId}`)            
-            .then(response => {
-                order.value = response.data.data;
-            })
-            .catch(error => console.log(error))
-    }
+const getOrder = async (orderId) => {
+    axios.get(`/api/order/${orderId}`)
+        .then(response => {
+            order.value = response.data.data;
+        })
+        .catch(error => console.log(error))
+}
+
+const updateOrder = async (orderId) => {
+    axios.put(`/api/order/${orderId}`)
+        .then(response => {
+           
+        })
+        .catch(error => console.log(error))
+}    
 </script>
 
 <template>
