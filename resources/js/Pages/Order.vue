@@ -18,6 +18,13 @@ const getOrder = async (orderId) => {
 
 <template>
     <div id="order-show">
+        <div class="flex flex-row">
+            <h1 class="text-center py-6 text-3xl font-extrabold">Order #{{ order.id }}</h1>
+        </div>
+        <div class="flex flex-row">
+
+        </div>    
+        
         
     </div>
 </template>
