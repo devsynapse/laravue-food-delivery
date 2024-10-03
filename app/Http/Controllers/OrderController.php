@@ -56,4 +56,11 @@ class OrderController extends Controller
         return $order->id;
     }
 
+    public function getOrderProducts(int $orderId)
+    {
+        $order = Order::findOrFail($orderId);
+        
+        return $order->products();
+    }
+
 }
