@@ -29,4 +29,11 @@ class ProductController extends Controller
 
         return ProductResource::collection($products);
     }
+
+    public function getProductAddons(int $productId)
+    {
+        $product = Product::findOrFail($productId);
+
+        
+    }
 }
