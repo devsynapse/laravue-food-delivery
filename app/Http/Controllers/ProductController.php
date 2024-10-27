@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Models\Product;
+use App\Models\Addon;
 use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
