@@ -10,7 +10,7 @@ const searchProducts = (e) => {
      if (searchQuery.value.length > 0) {
             axios.get('/api/find-products/'+searchQuery.value)
             .then((response) => {
-                searchResults.value = response.data
+                searchResults.value = response.data.data
                 showSearchDropdown.value = true
             })
             .catch((error) => {

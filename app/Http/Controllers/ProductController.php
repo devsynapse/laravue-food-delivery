@@ -24,11 +24,11 @@ class ProductController extends Controller
         return ProductResource::collection(Product::take(4)->get());
     }
 
-    public function findProducts(string $searchString): JsonResponse
+    public function findProducts(string $searchString): AnonymousResourceCollection
     {
         $products = Product::where('name', 'LIKE', '%'.$searchString.'%')->get();
 
-        return response()->json($products);
+        return ProductResource::collection($products);
     }
 
     public function getProductAddons(int $productId)
