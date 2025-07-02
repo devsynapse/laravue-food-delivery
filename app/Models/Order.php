@@ -1,12 +1,9 @@
 <?php
-
 namespace App\Models;
-use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Models\Product;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Product;
 class Order extends Model
 {
     protected $fillable = ['first_name', 'last_name', 'address', 'unit', 'comment', 'status'];
@@ -16,6 +13,6 @@ class Order extends Model
      */
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class)->withPivot('order_id', 'product_id', 'qty', 'price', 'total');
+        return $this->belongsToMany(Product::class)->withPivot('qty', 'price', 'total');
     }
 }

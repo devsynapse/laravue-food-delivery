@@ -3,26 +3,38 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use App\Models\Order;
 use App\Http\Resources\OrderResource;
+use App\Models\Order;
 use App\Enums\OrderStatus;
+use App\Models\Product;
 
 class OrderController extends Controller
 {
+    /**
+     * Display a list of all orders with their products.
+     */
     public function index(Request $request): AnonymousResourceCollection
     {
-        return OrderResource::collection(Order::all());
+        $orders = Order::with('products')->get();
+        return OrderResource::collection($orders);
     }
 
+    /**
+     * Display a specific order with its products.
+     */
     public function getOrder(int $orderId): OrderResource
     {
-        return new OrderResource(Order::findOrFail($orderId));
+        $order = Order::with('products')->findOrFail($orderId);
+        return new OrderResource($order);
     }
 
-    public function store(StoreOrderRequest $request)
+    /**
+     * Store a new order and attach selected products.
+     */
+    public function store(StoreOrderRequest $request): int|JsonResponse
     {
         $orderData = $request->validated();
         $orderData['status'] = OrderStatus::NEW->value;
@@ -31,36 +43,54 @@ class OrderController extends Controller
         
         $orderProducts = [];
 
-        if ($request->has('products')) {
-            foreach($request->post('products') as $product) {
-                $orderProducts[] = [
-                    'product_id' => $product['id'],
-                    'qty' => $product['qty'],
-                    'price' => $product['price'],
-                    'total' => $product['price'] * $product['qty'],
-                ];
-            }
+        if (!$request->has('products') || empty($request->products)) {
+            return response()->json(['error' => 'No products provided'], 422);
         }
+        
+        foreach($request->post('products') as $productData) {
+            $product = Product::find($productData['id']);
 
+            if (!$product) {
+                continue;
+            }
+
+            $orderProducts[$productData['id']] = [
+                'qty' => $productData['qty'],
+                'price' => $product->price,
+                'total' => $product->price * $productData['qty'],
+            ];
+        }
+        
         $order->products()->attach($orderProducts);
 
         return $order->id;
     }
 
-    public function update(UpdateOrderRequest $request, int $orderId)
+    /**
+     * Update the status of an existing order.
+     */
+    public function update(UpdateOrderRequest $request, int $orderId): int
     {
-        $order = Order::find($orderId);
-        $order->status = $request->safe()->only(['status']);
+        $order = Order::findOrFail($orderId);
+        $validated = $request->validated();
+
+        if (isset($validated['status'])) {
+            $order->status = $validated['status'];
+        }
+
         $order->save();
 
         return $order->id;
     }
 
-    public function getOrderProducts(int $orderId)
+    /**
+     * Get the products associated with a specific order.
+     */
+    public function getOrderProducts(int $orderId): JsonResponse
     {
         $order = Order::findOrFail($orderId);
         
-        return $order->products();
+        return response()->json($order->products);
     }
 
 }

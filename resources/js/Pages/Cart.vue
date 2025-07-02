@@ -7,6 +7,7 @@ const cartStore = useCartStore()
 const errors = ref({})
 const cartProducts = ref([])
 const cartProductsPrice = ref(0)
+const cartTotalPrice = ref(0)
 
 onMounted(async() => {
     getCartProducts()
@@ -23,7 +24,7 @@ const cartReduceProduct = (product_id) => {
 }
 
 const cartRemoveProduct = (product_id) => {
-    const qty = cartStore.removeProducFromCart(product_id)
+    const qty = cartStore.removeProductFromCart(product_id)
     cartUpdateProduct(product_id, qty)
 }
 
@@ -31,8 +32,7 @@ const cartUpdateProduct = (product_id, qty) => {
     const prodIndex = cartProducts.value.findIndex(prod => prod.id === product_id);
       
     if (qty < 1) {
-        newProducts = cartProducts.value.splice(prodIndex, 1)
-        cartProducts.value = newProducts
+        cartProducts.value.splice(prodIndex, 1)
         updateCartTotal()
         return
     }
@@ -44,6 +44,10 @@ const cartUpdateProduct = (product_id, qty) => {
 
 const getCartProducts = async () => {
     const productIds = Object.keys(cartStore.products)
+
+    if (productIds.length === 0) return;
+
+    cartProducts.value = []
 
     await axios.get('/api/cart', 
         {
@@ -74,6 +78,8 @@ const updateCartTotal = () => {
     cartProductsPrice.value = cartProducts.value.reduce((acc, prod) => {
         return acc + (prod.qty * prod.price)
     },0)
+
+    cartTotalPrice.value = cartProductsPrice.value
 }
 
 const form = ref({
@@ -82,11 +88,18 @@ const form = ref({
     address: '',
     unit: '',
     comment: '',
-    products: cartProducts,
 })
 
 const submit = () => {
-    axios.post('/api/order', form.value)
+    const payload = {
+        ...form.value,
+        products: cartProducts.value.map(p => ({
+            id: p.id,
+            qty: p.qty,
+        })),
+    }
+
+    axios.post('/api/order', payload)
         .then((response) => {      
             if (response.status === 200) {
                 errors.value = {}
@@ -109,7 +122,7 @@ const submit = () => {
             <div id="order-info" class="flex flex-col xl:flex-row gap-6">                        
                 <div id="order-items" class="bg-white rounded p-4 w-full xl:w-1/2">
 
-                    <div v-for="product in cartProducts" class="order-item flex items-center border-b border-[#2222221a] pb-[15px] mb-[15px]">
+                    <div v-for="product in cartProducts" :key="product.id" class="order-item flex items-center border-b border-[#2222221a] pb-[15px] mb-[15px]">
                         <div class="overflow-hidden rounded relative w-3/12">
                             <img :src="getImageUrl(product.img_url)" class="h-full w-full object-cover">
                         </div>
@@ -117,7 +130,7 @@ const submit = () => {
                             <div class="mb-[10px] flex flex-col items-start">
                                 <p class="font-bold">{{ product.name }}</p>
                                 <div>
-                                    <p>Add-ons: <span>Tomato, chesee, pickles</span></p>
+                                    <p>Toppings: <span>Tomato, chesee, pickles</span></p>
                                 </div>
                                 <div class="flex justify-start font-bold mt-2 text-lg">price: ${{ product.price }}</div>
                             </div>
@@ -132,7 +145,7 @@ const submit = () => {
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                                         </svg>
                                     </button>
-                                    <input type="text" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5" :value="product.qty" />
+                                    <input type="text" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5" :value="product.qty" readonly/>
                                     <button @click="cartAddProduct(product.id)" type="button" id="increment-button" data-input-counter-increment="quantity-input" class="bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-2 h-11 focus:ring-gray-100 focus:ring-2 focus:outline-none">
                                         <svg class="w-3 h-3 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
@@ -154,7 +167,7 @@ const submit = () => {
                     <div class="flex flex-wrap flex-col rounded bg-white mb-6 p-4">
                         <p class="font-bold">Products: ${{ cartProductsPrice }}</p>
                         <p class="font-bold">Delivery: $0</p>
-                        <p class="font-bold">Total: $100</p>
+                        <p class="font-bold">Total: ${{ cartTotalPrice }}</p>
                     </div>
                     <div class="flex flex-col mb-6 bg-white p-4">
                         <div class="flex flex-wrap mb-6">
@@ -162,14 +175,14 @@ const submit = () => {
                                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
                                     First Name
                                 </label>
-                                <input v-model="form.first_name" class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="First Name">
+                                <input v-model="form.first_name" class="appearance-none block w-full text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="First Name">
                                 <p class="text-red-500 text-xs italic" v-if="errors?.first_name">{{ errors.first_name[0] }}</p>
                             </div>
                             <div class="w-full md:w-1/2 px-3">
                                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
                                     Last Name
                                 </label>
-                                <input v-model="form.last_name" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text" placeholder="Last Name">
+                                <input v-model="form.last_name" class="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text" placeholder="Last Name">
                                 <p class="text-red-500 text-xs italic" v-if="errors?.last_name">{{ errors.last_name[0] }}</p>
                             </div>
                         </div>
@@ -178,14 +191,14 @@ const submit = () => {
                                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-street">
                                     Street address
                                 </label>
-                                <input v-model="form.address" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-street" type="text" placeholder="Street address">
+                                <input v-model="form.address" class="appearance-none block w-full text-gray-700 border border-gray-200 bg-gray-50 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-street" type="text" placeholder="Street address">
                                 <p class="text-red-500 text-xs italic" v-if="errors?.address">{{ errors.address[0] }}</p>
                             </div>
                             <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
                                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-unit">
                                     Unit #
                                 </label>
-                                <input v-model="form.unit" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-unit" type="text" placeholder="Unit">
+                                <input v-model="form.unit" class="appearance-none block w-full text-gray-700 border border-gray-200 bg-gray-50 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-unit" type="text" placeholder="Unit">
                                 <p class="text-red-500 text-xs italic" v-if="errors?.unit">{{ errors.unit[0] }}</p>
                             </div>
                         </div>
@@ -194,7 +207,7 @@ const submit = () => {
                                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-comment">
                                     Comment to order
                                 </label>
-                                <textarea v-model="form.comment" id="comment" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Add comment for to your order..."></textarea>
+                                <textarea v-model="form.comment" id="comment" rows="4" class="block p-2.5 w-full text-sm text-gray-700  rounded border bg-gray-50 border-gray-200 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Add comment to your order..."></textarea>
                                 <p class="text-red-500 text-xs italic" v-if="errors?.comment">{{ errors.comment[0] }}</p>
                             </div>
                         </div>
