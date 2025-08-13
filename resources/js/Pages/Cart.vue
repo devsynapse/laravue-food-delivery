@@ -6,8 +6,12 @@ import { useCartStore } from '@/Stores/cartStore'
 const cartStore = useCartStore()
 const errors = ref({})
 const cartProducts = ref([])
-const cartProductsPrice = ref(0)
-const cartTotalPrice = ref(0)
+
+const cartProductsPrice = computed(() =>
+  cartProducts.value.reduce((acc, prod) => acc + prod.qty * prod.price, 0)
+);
+
+const cartTotalPrice = computed(() => cartProductsPrice.value);
 
 onMounted(async() => {
     getCartProducts()
@@ -33,12 +37,10 @@ const cartUpdateProduct = (product_id, qty) => {
       
     if (qty < 1) {
         cartProducts.value.splice(prodIndex, 1)
-        updateCartTotal()
         return
     }
 
     cartProducts.value[prodIndex]['qty'] = qty
-    updateCartTotal()
     return
 }
 
@@ -69,17 +71,9 @@ const getCartProducts = async () => {
             })          
         })
         .then(() => {
-            updateCartTotal()
+            
         })
         .catch(error => console.log(error))
-}
-
-const updateCartTotal = () => {
-    cartProductsPrice.value = cartProducts.value.reduce((acc, prod) => {
-        return acc + (prod.qty * prod.price)
-    },0)
-
-    cartTotalPrice.value = cartProductsPrice.value
 }
 
 const form = ref({
@@ -163,7 +157,7 @@ const submit = () => {
                     </div>
                     
                 </div>
-                <div id="order-info" class="w-full xl:w-1/2">
+                <div id="order-info-total" class="w-full xl:w-1/2">
                     <div class="flex flex-wrap flex-col rounded bg-white mb-6 p-4">
                         <p class="font-bold">Products: ${{ cartProductsPrice }}</p>
                         <p class="font-bold">Delivery: $0</p>

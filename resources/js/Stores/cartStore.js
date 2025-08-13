@@ -3,10 +3,11 @@ import { useLocalStorage } from '@vueuse/core'
 
 export const useCartStore = defineStore('cart', {
     state: () => ({
-        products: useLocalStorage('cart', {}),
+        products: useLocalStorage('cart', {}), // product_id: quantity map
     }),
 
     getters: {
+        // Total number of items in cart
         count(state) {
             return Object.values(state.products).reduce((a, b) => a + b, 0)
         },
@@ -27,13 +28,17 @@ export const useCartStore = defineStore('cart', {
                 return this.products[product_id]
             }
 
+            // Remove product if quantity is 1 or less
             delete this.products[product_id]
             return 0
         },
 
-        removeProducFromCart(product_id) {
+        removeProductFromCart(product_id) {
             delete this.products[product_id]
             return 0
         },
+        clearCart() {
+            this.products = {}
+        }
     },
 })
