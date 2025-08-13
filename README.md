@@ -29,7 +29,7 @@ It provides complete functionality for users to browse menu, order food, and for
 ## 🛠 Tech Stack
 
 **Backend**  
-- Laravel 10  
+- Laravel 12  
 - MySQL 
 
 **Frontend**  
@@ -44,28 +44,51 @@ It provides complete functionality for users to browse menu, order food, and for
 
 ---
 
-## 📦 Installation
+# 📦 Installation
 
-### 1️⃣ Clone the Repository
+## 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/devsynapse/laravue-food-delivery.git
 cd laravue-food-delivery
 ```
 
-### 1️⃣ Backend the Repository
+## 2️⃣ Backend setup
 ```bash
 cp .env.example .env
 composer install
 php artisan key:generate
 ```
 
-# Update your .env file with database credentials:
+### Update your .env file with database credentials:
+```
 DB_CONNECTION=mysql
-DB_HOST=mysql
+DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=laravue_food
 DB_USERNAME=username
 DB_PASSWORD=password
+```
 
-# Run migrations and seed the database:
+### Run migrations and seed the database:
+```bash
 php artisan migrate --seed
+```
+
+### Start Laravel development server:
+```bash
+php artisan serve
+```
+
+## 3️⃣ Frontend setup
+```bash
+nvm use
+npm install
+npm run dev
+```
+
+By default, Laravel runs on http://127.0.0.1:8000 and the Vue frontend on http://127.0.0.1:5173
+
+## 🐳 Running with Docker (Optional)
+```bash
+docker compose up -d
+```
